@@ -16,14 +16,20 @@ public class PaymentTransitionLog {
     @GeneratedValue(strategy = GenerationType.UUID)
    private UUID id;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "payment_id", nullable = false)
+    private Payment payment;
+
     @Enumerated(EnumType.STRING)
     @Column(name = "from_status", length = 30)
-   private Payment payment;
-
-    @Column(name = "to_status", nullable = false, length = 300)
     private PaymentStatus fromStatus;
 
-    @Column(name = "event", nullable = false , length=300)
+    @Enumerated(EnumType.STRING)
+    @Column(name = "to_status", nullable = false, length = 30)
+    private PaymentStatus toStatus;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "event", nullable = false, length = 100)
     private PaymentEvent event;
 
     @Enumerated(EnumType.STRING)

@@ -8,7 +8,7 @@ import java.util.UUID;
 @Table(name = "api_key")
 public class ApiKey {
 
-      @id
+      @Id
       @GeneratedValue(strategy = GenerationType.UUID)
       private UUID id;
 
@@ -27,7 +27,7 @@ public class ApiKey {
       private Environment environment;
 
       @Column(nullable = false)
-      private String enabled = true;
+      private boolean enabled = true;
       private java.time.LocalTime lastUsedAt;
       private java.time.LocalTime rotatedAt;
       private  java.time.LocalDateTime gracePeriodExpiresAt;
