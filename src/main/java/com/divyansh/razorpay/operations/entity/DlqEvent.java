@@ -19,7 +19,8 @@ public class DlqEvent {
     @Column(nullable = false)
     private UUID merchantId;
 
-    @Column(nullable = false)
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "webhook_event_id", nullable = false)
     private WebhookEvent webhookEvent;
 
     @Column(length = 1000)
