@@ -1,7 +1,9 @@
 package com.divyansh.razorpay.merchant.controller;
 
-import com.divyansh.razorpay.merchant.dto.request.ApiKeyCreateResponse;
 import com.divyansh.razorpay.merchant.dto.request.CreateApiKeyRequest;
+import com.divyansh.razorpay.merchant.dto.response.ApiKeyCreateResponse;
+import com.divyansh.razorpay.merchant.dto.response.ApiKeyResponse;
+import com.divyansh.razorpay.merchant.repository.ApiKeyRepository;
 import com.divyansh.razorpay.merchant.service.ApiKeyService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -9,22 +11,36 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
-@RequestMapping("/v1/merchants/{merchnatId}/api-keys")
+@RequestMapping("/v1/merchants/{merchantId}/api-keys")
 @RequiredArgsConstructor
 public class ApiKeyController {
 
     private  final ApiKeyService apiKeyService;
+    private final ApiKeyRepository apiKeyRepository;
 
     @PostMapping
-    public ResponseEntity<ApiKeyCreateResponse> create(@PathVariable UUID merchnatId, @Valid @ResponseBody CreateApiKeyRequest request){
+    public ResponseEntity<ApiKeyCreateResponse> create(@PathVariable UUID merchantId, @Valid @RequestBody CreateApiKeyRequest request){
 
         return ResponseEntity.status(HttpStatus.CREATED).body(
-                apiKeyService.create(merchnatId,request)
+                apiKeyService.create(merchantId,request)
         );
     }
+
+    @GetMapping
+    public ResponseEntity<List<ApiKeyResponse>> listByMerchant(@PathVariable UUID merchantId){
+        return ResponseEntity.ok(apiKeyService.listByMerchant(merchantId));
+    }
+
+    @DeleteMapping("/keyId")
+    public ResponseEntity<Void> revoke(@PathVariable UUID merchantId, @PathVariable UUID keyId){
+        apiKeyService.revoke(merchantId,keyId);
+        return ResponseEntity.noContent().build();
+    }
+
 
 
 }

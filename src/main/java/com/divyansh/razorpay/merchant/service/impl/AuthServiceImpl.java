@@ -32,14 +32,17 @@ public class AuthServiceImpl implements AuthService {
         }
 
         Merchant  merchant = Merchant.builder()
+                .name(request.name())
+                .email(request.email())
+                .contactNumber(request.contactNumber())
                 .businessName(request.BusinessName())
                 .businessType(request.businessType())
-                .name(request.email())
                 .status(MerchantStatus.PENDING_KYC)
                 .build();
         merchant = merchantRepository.save(merchant);
 
         AppUser appUser = AppUser.builder().
+                name(request.name()).
         email(request.email())
                 .merchant(merchant)
                 .passwordHash(request.password()) // TODO: encrypt using bcrypt

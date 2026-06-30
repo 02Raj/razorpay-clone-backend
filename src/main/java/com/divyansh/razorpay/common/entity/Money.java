@@ -4,7 +4,6 @@ import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
 
 @Embeddable
-
 public class Money {
 
     private int amountUnits;

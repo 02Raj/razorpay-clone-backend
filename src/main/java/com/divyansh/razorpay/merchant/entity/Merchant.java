@@ -40,6 +40,7 @@ public class Merchant {
     private BusinessType businessType;
 
     @Column(length = 200,nullable = false)
+    @Builder.Default
     private MerchantStatus status = MerchantStatus.PENDING_KYC;
 
     @Column(length = 20)

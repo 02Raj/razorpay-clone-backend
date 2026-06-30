@@ -1,6 +1,6 @@
 package com.divyansh.razorpay.merchant.dto.request;
 
-public record CreateApiKeyRequest() {
+import com.divyansh.razorpay.merchant.entity.Environment;
 
-
+public record CreateApiKeyRequest(Environment environment) {
 }

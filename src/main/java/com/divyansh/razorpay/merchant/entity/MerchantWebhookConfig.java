@@ -28,6 +28,7 @@ public class MerchantWebhookConfig {
 
     private String webHookSecretHash;
 
+    @Builder.Default
     private Boolean enabled = true;
 
     private String eventType;

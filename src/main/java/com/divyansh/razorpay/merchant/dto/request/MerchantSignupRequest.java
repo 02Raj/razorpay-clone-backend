@@ -22,7 +22,10 @@ public record MerchantSignupRequest(
         @Size(max = 50, message = "Business name should not be more than 50 characters long ")
         String BusinessName,
 
+        BusinessType businessType,
 
-        BusinessType businessType
+        @NotNull(message = "Contact number is Required")
+        @Size(max = 20, message = "Contact number should not be more than 20 characters")
+        String contactNumber
 ) {
 }
