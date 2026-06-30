@@ -10,14 +10,19 @@ import com.divyansh.razorpay.merchant.entity.Merchant;
 import com.divyansh.razorpay.merchant.repository.ApiKeyRepository;
 import com.divyansh.razorpay.merchant.repository.MerchantRepository;
 import com.divyansh.razorpay.merchant.service.ApiKeyService;
+import org.springframework.transaction.annotation.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.jspecify.annotations.Nullable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
+@Transactional(readOnly = true)
 public class ApiKeyServiceImpl implements ApiKeyService {
 
     private final MerchantRepository merchantRepository;
@@ -61,10 +66,31 @@ public class ApiKeyServiceImpl implements ApiKeyService {
     }
 
     @Override
+    @Transactional
     public void revoke(UUID merchantId, UUID keyId) {
         ApiKey key =  apiKeyRepository.findById(keyId)
                 .filter( k -> k.getMerchant().getId().equals(merchantId))
-                .orElseThrow(() -> new ResourceNotFoundException("merchant", merchantId));
+                .orElseThrow(() -> new ResourceNotFoundException("Api Key", keyId));
+        key.setEnabled(false);
+    }
+
+    @Override
+    @Transactional
+    public @Nullable ApiKeyCreateResponse rotate(UUID merchantId, UUID keyId) {
+        ApiKey apiKey =  apiKeyRepository.findById(keyId)
+                .filter( k -> k.getMerchant().getId().equals(merchantId))
+                .orElseThrow(() -> new ResourceNotFoundException("Api Key", keyId));
+
+        String newRawSecret = RandomizerUtil.randomBase64(40);
+        apiKey.setPreviousKeySecretHash(apiKey.getKeySecretHash());
+        apiKey.setKeySecretHash(newRawSecret);
+        apiKey.setRotatedAt(LocalTime.from(LocalDateTime.now()));
+        apiKey.setGracePeriodExpiresAt(LocalDateTime.now().plusHours(24));
+        apiKey = apiKeyRepository.save(apiKey);
+
+        return new ApiKeyCreateResponse(apiKey.getId().toString(), apiKey.getKeyId(), newRawSecret, apiKey.getEnvironment());
 
     }
+
+
 }
