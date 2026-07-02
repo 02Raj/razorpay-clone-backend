@@ -81,6 +81,8 @@ public class ApiKeyServiceImpl implements ApiKeyService {
                 .filter( k -> k.getMerchant().getId().equals(merchantId))
                 .orElseThrow(() -> new ResourceNotFoundException("Api Key", keyId));
 
+        if(!apiKey.isEnabled()) throw new RuntimeException("Cannot rotate a disabled key");
+
         String newRawSecret = RandomizerUtil.randomBase64(40);
         apiKey.setPreviousKeySecretHash(apiKey.getKeySecretHash());
         apiKey.setKeySecretHash(newRawSecret);

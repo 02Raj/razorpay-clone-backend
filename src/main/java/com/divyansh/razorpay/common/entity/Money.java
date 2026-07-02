@@ -2,8 +2,15 @@ package com.divyansh.razorpay.common.entity;
 
 import jakarta.persistence.Embeddable;
 import lombok.AllArgsConstructor;
+import lombok.EqualsAndHashCode;
+import lombok.Getter;
+import lombok.Setter;
 
 @Embeddable
+@Getter
+@Setter
+@AllArgsConstructor
+@EqualsAndHashCode
 public class Money {
 
     private int amountUnits;
@@ -11,10 +18,10 @@ public class Money {
 
 
 
-     public Money(int amountUnits, String currency) {
-         this.amountUnits = amountUnits;
-         this.currency = currency;
-     }
+//     public Money(int amountUnits, String currency) {
+//         this.amountUnits = amountUnits;
+//         this.currency = currency;
+//     }
    public static Money of(int amountUnits,String currency) {
        return new Money(amountUnits,currency);
    }

@@ -27,7 +27,7 @@ public class OrderRecord {
 
     //no Fk - cross-service boundary
     @Column(name = "merchant_id", nullable = false)
-    private UUID MerchantId;
+    private UUID merchantId;
 
     @Embedded
     private Money amount;
@@ -44,7 +44,7 @@ public class OrderRecord {
 
     @JdbcTypeCode(SqlTypes.JSON)
     @Column(columnDefinition = "jsonb")
-    private Map<String, Objects> notes;
+    private Map<String, Object> notes;
 
     @Column(name = "expires_at" , nullable = false)
     private LocalDateTime expiresAt;
